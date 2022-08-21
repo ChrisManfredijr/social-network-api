@@ -1,4 +1,37 @@
 const {Schema, model, Types} = require('mongoose');
+const dateFormat = require('../utlis/dateFormat')
+
+
+const ReactionSchema = new Schema(
+     {
+          reactionId: {
+               type: Schema.Types.ObjectId,
+               default: () => new Types.ObjectId
+          },
+          reactionBody: {
+               type: String,
+               required: true,
+               maxlength:280,
+          },
+          username: {
+               type: String,
+               required: true
+          },
+          createdAt: {
+               type: Date,
+               default: Date.now,
+               get: createdAtVal => dateFormat(createdAtVal)
+          }
+
+     },
+     {
+          toJSON: {
+              virtuals: true,
+              getters:true,
+          },
+          id: false
+     }
+);
 
 const ThoughtSchema = new Schema (
     {
@@ -10,8 +43,8 @@ const ThoughtSchema = new Schema (
        },
        createdAt: {
             type: Date,
-            default: Date.now
-            //use getter method to format the timestamp on query
+            default: Date.now,
+            get: (createdAtVal) => dateFormat(createdAtVal)           
        },
        username: {
             type: String,
@@ -22,12 +55,21 @@ const ThoughtSchema = new Schema (
             type : Schema.Types.ObjectId,
             ref: 'Reaction'
         }
-       ]
-       //reaction array of nested documents create with the reaction schema
-    }
+       ],
+       reactions: [ReactionSchema]
+    },
+    {
+     toJSON: {
+         virtuals: true,
+         getters:true,
+     },
+     id: false
+ }
 );
 
-
+ThoughtSchema.virtual('userCount').get(function() {
+     return this.reactions.length;
+})
 const Thought = model('Thought', ThoughtSchema);
 
 module.exports = Thought;

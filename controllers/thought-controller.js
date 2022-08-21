@@ -1,4 +1,4 @@
-const { response } = require('express');
+
 const {User, Thought} = require('../models');
 
 const thoughtController = {
@@ -68,3 +68,5 @@ const thoughtController = {
     },
 
 }
+
+module.exports = thoughtController;

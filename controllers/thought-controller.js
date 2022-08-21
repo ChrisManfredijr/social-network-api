@@ -2,7 +2,7 @@
 const {User, Thought} = require('../models');
 
 const thoughtController = {
-    getThought({params}, res) {
+    getThought({}, res) {
         Thought.find({})
             .then((dbThoughtData) => res.json(dbThoughtData))
             .catch(err => {
@@ -44,7 +44,17 @@ const thoughtController = {
             })
             .catch(err => res.json(err));
     },
-    
+    updateThought({params}, res) {
+        Thought.findOneAndUpdate({_id: params.thoughtId}, body, {new:true})
+            .then(dbThoughtData => {
+                if(!dbThoughtData){
+                    res.status(404).json({message: 'Thought not found'});
+                    return;
+                }
+                res.json(dbThoughtData);
+            })
+            .catch(err => res.hson(err))
+    },
     removeThought({params}, res) {
         Thought.findOneAndDelete({_id: params.thoughtId})
             .then(deletedThought => {

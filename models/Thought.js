@@ -26,10 +26,9 @@ const ReactionSchema = new Schema(
      },
      {
           toJSON: {
-               virtuals: true,
                getters:true,
           },
-
+        
      }
 );
 
@@ -38,7 +37,7 @@ const ThoughtSchema = new Schema (
        thoughtText: {
             type: String,
             required: true,
-            minlength: 1,
+            minlength:1,
             maxlength:280,
        },
        createdAt: {
@@ -50,12 +49,7 @@ const ThoughtSchema = new Schema (
             type: String,
             required: true,
        },
-       reactions: [
-        {
-            type : Schema.Types.ObjectId,
-            ref: 'Reaction'
-        }
-       ],
+       
        reactions: [ReactionSchema]
     },
     {
